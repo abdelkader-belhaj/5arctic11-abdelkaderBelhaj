@@ -39,6 +39,22 @@ pipeline {
                 }
             }
         }
+        stage('Docker Build') {
+            steps {
+                dir('backend') {
+                    sh 'docker build -t abdelkader0707/abdelkaderbelhaj_5arctic11_devopsprojet:latest .'
+                }
+            }
+        }
+
+        stage('Docker Push') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
+                    sh 'docker push abdelkader0707/abdelkaderbelhaj_5arctic11_devopsprojet:latest'
+                }
+            }
+        }
     }
 
     post {
